@@ -22,7 +22,6 @@
         name: "New",
         data() {
             return {
-                // Create a new form instance
                 form: new Form({
                     cat_name: '',
 
@@ -38,8 +37,7 @@
                             position: 'top-end',
                             icon: 'success',
                             title: 'Add category successfully!',
-                            showConfirmButton: false,
-                            timer: 500
+                             timer: 1000
                         })
                     })
             }

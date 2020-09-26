@@ -10,8 +10,10 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::orderByDesc('id')->get();
+        $countCate = $categories->count();
         return response()->json([
-            'categories' => $categories
+            'categories' => $categories,
+            'countCategory' => $countCate,
         ], 200);
     }
 
@@ -24,5 +26,30 @@ class CategoryController extends Controller
         $category = New Category();
         $category->cat_name = $request->cat_name;
         $category->save();
+    }
+    public function edit($id)
+    {
+        $category = Category::find($id);
+        return response()->json([
+            'category' => $category
+        ], 200);
+
+    }
+
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [
+            'cat_name' => 'required|min:2|max:50'
+        ]);
+        $category = Category::find($id);
+        $category->cat_name = $request->cat_name;
+        $category->save();
+
+    }
+
+    public function delete($id)
+    {
+        $category = Category::findOrFail($id);
+        $category->delete();
     }
 }

@@ -14,7 +14,12 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        $comment = Comment::orderByDesc('id')->get();
+        $countComment = $comment->count();
+        return response()->json([
+            'comments' => $comment,
+            'countComment' => $countComment,
+        ], 200);
     }
 
     /**

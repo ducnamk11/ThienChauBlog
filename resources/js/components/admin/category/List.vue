@@ -1,13 +1,12 @@
 <template>
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
-            <section class="content col-md-12">
+            <section class="content col-md-10">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Category</h3>
                         <router-link to="/add-category" class="btn btn-primary float-right " href="">Add</router-link>
                     </div>
-                    <!-- /.card-header -->
                     <div class="card-body">
                         <div id="jsGrid1" class="jsgrid" style="position: relative; height: 100%; width: 100%;">
                             <div class="jsgrid-grid-header jsgrid-header-scrollbar">
@@ -15,22 +14,19 @@
                                     <thead>
                                     <tr>
                                         <th width="5%" scope="col">#</th>
-                                        <th width="30%" scope="col">Title</th>
-                                        <th width="40%" scope="col">Description</th>
-                                        <th width="15%" scope="col">Photo</th>
+                                        <th width="30%" scope="col">Description</th>
+                                        <th width="30%" scope="col">Date</th>
                                         <th width="10%" scope="col">Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
+                                    <tr v-for="(cat, index) in getallCategory">
+                                        <th scope="row">{{index+1}}</th>
+                                        <td>{{cat.cat_name}}</td>
+                                        <td>{{cat.updated_at | timeformat}}</td>
                                         <td>
-                                            <a href="">Edit</a>
-                                            <a href="">Delete</a>
+                                            <router-link :to="`/edit-category/${cat.id}`" href="">Edit</router-link>
+                                            <a href="" @click.prevent="deleteCategory(cat.id)">Delete</a>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -50,6 +46,43 @@
 <script>
     export default {
         name: "List",
+        mounted() {
+            this.$store.dispatch('allCategory')
+        },
+        computed: {
+            getallCategory() {
+                return this.$store.getters.getCategory;
+            }
+        },
+        methods: {
+            deleteCategory(id) {
+
+
+                Swal.fire({
+                    title: 'Are you sure delete this?',
+                     icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.get('/category/' + id)
+                            .then((res) => {
+                                this.$store.dispatch('allCategory')
+                            })
+                        Swal.fire(
+                            {
+                                title: 'Delete Category successfully!',
+                                icon: 'success',
+                                timer: 1000
+                            }
+                        )
+                    }
+                })
+
+            }
+        }
 
     }
 </script>
